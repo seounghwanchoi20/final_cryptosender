@@ -17,7 +17,6 @@ const baseChainConfig: Chain = {
   ...base,
   id: 8453,
   name: "Base",
-  network: "base",
 };
 
 function OnchainProviders({ children }: Props) {
