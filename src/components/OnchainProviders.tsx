@@ -7,10 +7,18 @@ import { base } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 import { NEXT_PUBLIC_CDP_API_KEY } from "../config";
 import { useWagmiConfig } from "../wagmi";
+import type { Chain } from "viem";
 
 type Props = { children: ReactNode };
 
 const queryClient = new QueryClient();
+
+const baseChainConfig: Chain = {
+  ...base,
+  id: 8453,
+  name: "Base",
+  network: "base",
+};
 
 function OnchainProviders({ children }: Props) {
   const wagmiConfig = useWagmiConfig();
@@ -20,7 +28,7 @@ function OnchainProviders({ children }: Props) {
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={NEXT_PUBLIC_CDP_API_KEY}
-          chain={base}
+          chain={baseChainConfig}
           config={{
             appearance: {
               mode: "auto",
@@ -36,5 +44,4 @@ function OnchainProviders({ children }: Props) {
     </WagmiProvider>
   );
 }
-
 export default OnchainProviders;
