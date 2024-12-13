@@ -19,6 +19,7 @@
   "dependencies": {
     "@coinbase/onchainkit": "^0.35.2",
     "@moralisweb3/next": "^2.27.2",
+    "@rainbow-me/rainbowkit": "^2.2.1",
     "@wagmi/connectors": "^5.5.3",
     "@wagmi/core": "^2.15.2",
     "ethers": "^6.13.4",
