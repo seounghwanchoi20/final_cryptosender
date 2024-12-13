@@ -19,9 +19,15 @@ type OnchainKitChain = {
 
 const queryClient = new QueryClient();
 
-const chainConfig = {
-  ...base,
-} satisfies OnchainKitChain & typeof base;
+const chainConfig: OnchainKitChain = {
+  id: base.id,
+  name: base.name,
+  rpcUrls: {
+    default: {
+      http: [...base.rpcUrls.default.http],
+    },
+  },
+};
 
 function OnchainProviders({ children }: Props) {
   const wagmiConfig = useWagmiConfig();
@@ -31,7 +37,10 @@ function OnchainProviders({ children }: Props) {
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={NEXT_PUBLIC_CDP_API_KEY}
-          chain={chainConfig}
+          chain={{
+            ...chainConfig,
+            nativeCurrency: base.nativeCurrency,
+          }}
           config={{
             appearance: {
               mode: "auto",
