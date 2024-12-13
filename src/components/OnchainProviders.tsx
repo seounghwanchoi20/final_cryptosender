@@ -1,54 +1,50 @@
 "use client";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
+import { base } from "viem/chains";
 import { WagmiProvider } from "wagmi";
-import type { Chain } from "viem";
+import { NEXT_PUBLIC_CDP_API_KEY } from "../config";
+import { useWagmiConfig } from "../wagmi";
 
-const NEXT_PUBLIC_CDP_API_KEY = process.env.NEXT_PUBLIC_CDP_API_KEY;
-
-const baseChain = {
-  id: 8453,
-  name: "Base",
-  network: "base",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
+type Props = { children: ReactNode };
+type OnchainKitChain = {
+  id: number;
+  name: string;
   rpcUrls: {
-    default: {
-      http: ["https://mainnet.base.org"],
-    },
-    public: {
-      http: ["https://mainnet.base.org"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Basescan",
-      url: "https://basescan.org",
-    },
-  },
-} as Chain;
+    default: { http: string[] };
+  };
+};
 
 const queryClient = new QueryClient();
 
-export function OnchainProviders({ children, wagmiConfig }) {
+const chainConfig = {
+  ...base,
+} satisfies OnchainKitChain & typeof base;
+
+function OnchainProviders({ children }: Props) {
+  const wagmiConfig = useWagmiConfig();
+
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={NEXT_PUBLIC_CDP_API_KEY}
-          chain={baseChain}
+          chain={chainConfig}
           config={{
             appearance: {
               mode: "auto",
+              theme: "base",
             },
           }}
         >
-          {children}
+          <RainbowKitProvider modalSize="compact">
+            {children}
+          </RainbowKitProvider>
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
 }
+export default OnchainProviders;
